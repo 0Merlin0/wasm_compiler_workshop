@@ -1,23 +1,43 @@
 start =
-    _ s:statement _ ";" _ {
+    _ r:return? _ {
+        let statements = [];
+        if (r) {
+            statements.push(r);
+        }
         return { type: 'program',
-            child: s }
-    }
-
-statement =
-    r:return {
-        return r;
+            children: statements }
     }
 
 return =
-    "return" v:value {
+    "return" v:sum ";" {
         return { type: 'return',
             child: v }
     }
 
+sum =
+    first:product rest:( _ ("+" / "-") _ product)* {
+        return { type: 'sum',
+            child: first,
+            children: rest }
+    }
+
+product =
+    first:factor rest:( _ ("/" / "*") _ factor)* {
+        return { type: 'product',
+            child: first,
+            children: rest }
+    }
+
+factor =
+    _ "(" _ s:sum _ ")" _ { return s; }
+    / v:value { return v; }
+
 value =
+    v:number { return v; }
+
+number =
     _ digits:[0-9]+ _ {
-        return { type: 'value',
+        return { type: 'number',
             value: parseInt(digits.join(""), 10) }
     }
 
