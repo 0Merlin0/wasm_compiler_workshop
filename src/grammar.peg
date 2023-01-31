@@ -1,0 +1,25 @@
+start =
+    _ s:statement _ ";" _ {
+        return { type: 'program',
+            child: s }
+    }
+
+statement =
+    r:return {
+        return r;
+    }
+
+return =
+    "return" v:value {
+        return { type: 'return',
+            child: v }
+    }
+
+value =
+    _ digits:[0-9]+ _ {
+        return { type: 'value',
+            value: parseInt(digits.join(""), 10) }
+    }
+
+_ "whitespace" =
+    [ \t\n]*

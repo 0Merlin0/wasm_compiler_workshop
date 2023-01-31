@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "esnext",
+        "outDir": "build",
+        "sourceMap": true,
+        "watch": true,
+        "types": [
+            "node"
+        ]
+    },
+    "include": [
+        "src/**/*"
+    ]
+}

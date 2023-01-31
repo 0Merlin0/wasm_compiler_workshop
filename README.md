@@ -1,24 +1,33 @@
-Wasmer
-======
+DULL Iteration 1
+================
 
-Inspect
+Running
 -------
 
-Use
+Build compiler and compile inputs/example_1.dull :
 ```bash
-wasmer inspect wasi_hello_world.wasm
+npm start inputs/example_1.dull
 ```
-to see details about the wasm file
 
-Run
----
-Use
-```bash
-wasmer wasi_hello_world.wasm
+Run web-server to see the result in the browser:
 ```
-to run the program. Note that we receive an error due to insufficient permissions.
+npm run serve
+```
 
-The program tries to write to /helloworld, which we can make available using a mapping
-```bash
-wasmer --mapdir=/helloworld:. wasi_hello_world.wasm
+Build example in wasm/example.wat :
 ```
+npm run build-example
+```
+
+Layout
+======
+
+We will be changing mostly the src/grammar.peg and src/generator.ts files.
+
+For PEG grammar for peggy see:
+<https://peggyjs.org/documentation.html#grammar-syntax-and-semantics>
+
+For WebAssembly Text format:
+<https://webassembly.github.io/spec/core/text/index.html>
+
+But for the WAT it is mostly easier to look at the supplied example at wasm/example.wat

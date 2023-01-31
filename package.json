@@ -1,0 +1,20 @@
+{
+  "name": "wasm_compiler",
+  "version": "1.0.0",
+  "description": "A compiler outputting wasm",
+  "main": "build/compiler.js",
+  "scripts": {
+    "prestart": "npx tsc --build",
+    "start": "node build/compiler.js",
+    "poststart": "npx wat2wasm wasm/output.wat -o build/app.wasm",
+    "build-example": "npx wat2wasm wasm/example.wat -o build/app.wasm",
+    "serve": "npx live-server --watch=build"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.9",
+    "live-server": "^1.1.0",
+    "peggy": "^2.0.1",
+    "typescript": "^4.8.4",
+    "wat2wasm": "^3.0.0"
+  }
+}
