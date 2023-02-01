@@ -18,14 +18,36 @@ export class Generator {
         switch (element.type) {
             case 'program':
                 str += '(module \n';
-                str += '(func (export "_start") (result i32)\n';
+                str += '(func (export "_start") ';
+                let first = element.children[0];
+                if (first && first.type == 'inputs') {
+                    str += this._generate(first);
+                }
+
+                str += '(result i32)\n';
                 for (let child of element.children) {
+                    if (child.type == 'inputs') {
+                        continue;
+                    }
                     str += this._generate(child) + '\n';
                 }
                 str += '))\n';
                 break;
             case 'return':
                 str += this._generate(element.child);
+                break;
+            case 'inputs':
+                for (let child of element.children) {
+                    str += '(param $' + child.value + ' i32)';
+                }
+                break;
+            case 'locals':
+                for (let child of element.children) {
+                    str += '(local $' + child.value + ' i32)';
+                }
+                break;
+            case 'assignment':
+                str += '(local.set $' + element.children[0].value + ' ' + this._generate(element.children[1]) + ')';
                 break;
             case 'sum':
             case 'product':
@@ -60,6 +82,9 @@ export class Generator {
                 break;
             case 'number':
                 str += '(i32.const ' + element.value + ')';
+                break;
+            case 'identifier':
+                str += '(local.get $' + element.value + ')';
                 break;
         }
         return str;

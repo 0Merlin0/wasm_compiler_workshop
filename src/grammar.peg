@@ -1,11 +1,44 @@
 start =
-    _ r:return? _ {
+    _ d:inputs? _ l:locals? _ s:statement* _ r:return? _ {
         let statements = [];
+        if (d) {
+            statements.push(d);
+        }
+        if (l) {
+            statements.push(l);
+        }
+        statements.push(...s);
         if (r) {
             statements.push(r);
         }
         return { type: 'program',
             children: statements }
+    }
+
+statement =
+    a:assignment _ ";" {
+        return a;
+    }
+
+assignment =
+    i:identifier "=" s:sum {
+        return { type: 'assignment',
+            children: [i, s]
+        }
+    }
+
+inputs =
+    "inputs" _ first:identifier _ rest:( _ "," _ @identifier)* ";" {
+        return { type: 'inputs',
+            children: [first, ...rest]
+        }
+    }
+
+locals =
+    "locals" _ first:identifier _ rest:( _ "," _ @identifier)* ";" {
+        return { type: 'locals',
+            children: [first, ...rest]
+        }
     }
 
 return =
@@ -33,12 +66,19 @@ factor =
     / v:value { return v; }
 
 value =
-    v:number { return v; }
+    n:number { return n; }
+    / i:identifier { return i; }
 
 number =
     _ digits:[0-9]+ _ {
         return { type: 'number',
             value: parseInt(digits.join(""), 10) }
+    }
+
+identifier =
+    _ letters:[a-zA-Z_]+ _ {
+        return { type: 'identifier',
+            value: letters.join("") }
     }
 
 _ "whitespace" =
