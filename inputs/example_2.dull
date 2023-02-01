@@ -1,0 +1,5 @@
+inputs a, b;
+locals sum;
+
+sum = a + b;
+return sum / 2;
